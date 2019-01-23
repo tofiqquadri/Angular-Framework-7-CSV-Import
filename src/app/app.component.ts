@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 
 export class AppComponent {
 
@@ -15,28 +15,27 @@ export class AppComponent {
 
   @ViewChild('fileImportInput') fileImportInput: any;
 
-
   fileChangeListener($event: any): void {
 
-    var text = [];
-    var files = $event.srcElement.files;
+    let text = [];
+    let files = $event.srcElement.files;
 
     if (this.isCSVFile(files[0])) {
 
-      var input = $event.target;
-      var reader = new FileReader();
+      let input = $event.target;
+      let reader = new FileReader();
       reader.readAsText(input.files[0]);
 
-      reader.onload = (data) => {
+      reader.onload = () => {
         let csvData = reader.result;
-        let csvRecordsArray = csvData.split(/\r\n|\n/);
+        let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
 
         let headersRow = this.getHeaderArray(csvRecordsArray);
 
         this.csvRecords = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
-      }
+      };
 
-      reader.onerror = function() {
+      reader.onerror = function () {
         alert('Unable to read ' + input.files[0]);
       };
 
@@ -47,16 +46,16 @@ export class AppComponent {
   }
 
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
-    var dataArr = []
+    let dataArr = [];
 
     for (let i = 1; i < csvRecordsArray.length; i++) {
-      let data = csvRecordsArray[i].split(',');
+      let data = (<string>csvRecordsArray[i]).split(',');
 
       // FOR EACH ROW IN CSV FILE IF THE NUMBER OF COLUMNS
       // ARE SAME AS NUMBER OF HEADER COLUMNS THEN PARSE THE DATA
       if (data.length == headerLength) {
 
-        var csvRecord: CSVRecord = new CSVRecord();
+        let csvRecord: CSVRecord = new CSVRecord();
 
         csvRecord.firstName = data[0].trim();
         csvRecord.lastName = data[1].trim();
@@ -78,7 +77,7 @@ export class AppComponent {
 
   // GET CSV FILE HEADER COLUMNS
   getHeaderArray(csvRecordsArr: any) {
-    let headers = csvRecordsArr[0].split(',');
+    let headers = (<string>csvRecordsArr[0]).split(',');
     let headerArray = [];
     for (let j = 0; j < headers.length; j++) {
       headerArray.push(headers[j]);
@@ -93,7 +92,7 @@ export class AppComponent {
 
 }
 
-export class CSVRecord{
+export class CSVRecord {
 
   public firstName: any;
   public lastName: any;
@@ -102,8 +101,7 @@ export class CSVRecord{
   public title: any;
   public occupation: any;
 
-  constructor()
-  {
+  constructor() {
 
   }
 }
